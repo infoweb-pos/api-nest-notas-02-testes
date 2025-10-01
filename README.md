@@ -4,6 +4,37 @@ Este tutorial apresenta conceitos e práticas de testes automatizados utilizando
 
 ---
 
+## 📑 Sumário
+
+- [Parte 1: Introdução Teórica sobre Testes Automatizados](#parte-1-introdução-teórica-sobre-testes-automatizados)
+  - [1.1 O que são Testes Automatizados?](#11-o-que-são-testes-automatizados)
+  - [1.2 Tipos de Testes](#12-tipos-de-testes)
+  - [1.3 Pirâmide de Testes](#13-pirâmide-de-testes)
+  - [1.4 Ferramentas no NestJS](#14-ferramentas-no-nestjs)
+  - [1.5 Padrão AAA (Arrange-Act-Assert)](#15-padrão-aaa-arrange-act-assert)
+  - [1.6 Comandos de Teste](#16-comandos-de-teste)
+
+- [Parte 2: Testes Unitários (*.spec.ts)](#parte-2-testes-unitários-spects)
+  - [2.1 Estrutura Básica de um Teste Unitário](#21-estrutura-básica-de-um-teste-unitário)
+  - [2.2 Exemplo Real: Testando o AppController](#22-exemplo-real-testando-o-appcontroller)
+  - [2.3 Testando Services com Dependências](#23-testando-services-com-dependências)
+  - [2.4 Principais Matchers do Jest](#24-principais-matchers-do-jest)
+  - [2.5 Boas Práticas para Testes Unitários](#25-boas-práticas-para-testes-unitários)
+
+- [Parte 3: Testes E2E (*.e2e-spec.ts)](#parte-3-testes-e2e-e2e-spects)
+  - [3.1 Estrutura Básica de um Teste E2E](#31-estrutura-básica-de-um-teste-e2e)
+  - [3.2 Exemplo Real: Testando a Rota Principal](#32-exemplo-real-testando-a-rota-principal)
+  - [3.3 Testando API de Tarefas (CRUD Completo)](#33-testando-api-de-tarefas-crud-completo)
+  - [3.4 Métodos HTTP do Supertest](#34-métodos-http-do-supertest)
+  - [3.5 Configuração de Banco de Dados para E2E](#35-configuração-de-banco-de-dados-para-e2e)
+  - [3.6 Boas Práticas para Testes E2E](#36-boas-práticas-para-testes-e2e)
+  - [3.7 Diferenças entre Testes Unitários e E2E](#37-diferenças-entre-testes-unitários-e-e2e)
+
+- [Conclusão](#conclusão)
+- [Estrutura do Projeto](#estrutura-do-projeto)
+
+---
+
 ## Parte 1: Introdução Teórica sobre Testes Automatizados
 
 ### 1.1 O que são Testes Automatizados?
