@@ -681,6 +681,123 @@ Para testes E2E, é recomendado usar um banco de dados separado:
 
 **Dica**: Para SQLite (usado neste projeto), o banco é criado automaticamente. Para outros bancos, configure variáveis de ambiente específicas para teste.
 
+#### Configuração para PostgreSQL
+
+Para usar PostgreSQL em testes E2E, siga estas práticas:
+
+**1. Criar arquivo de configuração de teste**
+
+Crie um arquivo `.env.test` na raiz do projeto:
+
+```env
+# .env.test
+DATABASE_HOST=localhost
+DATABASE_PORT=5432
+DATABASE_USER=postgres
+DATABASE_PASSWORD=postgres
+DATABASE_NAME=test_database
+NODE_ENV=test
+```
+
+**2. Configurar TypeORM para testes**
+
+Modifique o módulo de teste para usar banco de dados de teste:
+
+```typescript
+// test/app.e2e-spec.ts
+import { Test, TestingModule } from '@nestjs/testing';
+import { INestApplication } from '@nestjs/common';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import * as request from 'supertest';
+
+describe('AppController (e2e)', () => {
+  let app: INestApplication;
+
+  beforeAll(async () => {
+    const moduleFixture: TestingModule = await Test.createTestingModule({
+      imports: [
+        TypeOrmModule.forRoot({
+          type: 'postgres',
+          host: process.env.DATABASE_HOST || 'localhost',
+          port: parseInt(process.env.DATABASE_PORT) || 5432,
+          username: process.env.DATABASE_USER || 'postgres',
+          password: process.env.DATABASE_PASSWORD || 'postgres',
+          database: process.env.DATABASE_NAME || 'test_database',
+          entities: [__dirname + '/../src/**/*.entity{.ts,.js}'],
+          synchronize: true, // Apenas para testes
+          dropSchema: true,  // Limpa banco antes de cada execução
+        }),
+        // ... outros módulos
+      ],
+    }).compile();
+
+    app = moduleFixture.createNestApplication();
+    await app.init();
+  });
+
+  afterAll(async () => {
+    await app.close();
+  });
+
+  // ... seus testes
+});
+```
+
+**3. Script para executar testes com PostgreSQL**
+
+Adicione no `package.json`:
+
+```json
+{
+  "scripts": {
+    "test:e2e": "NODE_ENV=test jest --config ./test/jest-e2e.json",
+    "test:e2e:watch": "NODE_ENV=test jest --config ./test/jest-e2e.json --watch"
+  }
+}
+```
+
+**4. Usar Docker para banco de teste**
+
+Crie um `docker-compose.test.yml`:
+
+```yaml
+version: '3.8'
+services:
+  postgres_test:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: test_database
+    ports:
+      - "5433:5432"
+    tmpfs:
+      - /var/lib/postgresql/data  # Banco em memória para testes mais rápidos
+```
+
+Execute os testes com:
+
+```bash
+# Iniciar banco de teste
+docker-compose -f docker-compose.test.yml up -d
+
+# Executar testes
+npm run test:e2e
+
+# Parar banco de teste
+docker-compose -f docker-compose.test.yml down
+```
+
+**Dicas importantes para PostgreSQL:**
+
+- ✅ Use `dropSchema: true` em testes para garantir estado limpo
+- ✅ Use `synchronize: true` apenas em ambiente de teste
+- ✅ Configure timeout maior para testes com banco de dados
+- ✅ Use transações para isolar testes (opcional)
+- ✅ Considere usar banco em memória (tmpfs no Docker) para testes mais rápidos
+- ❌ Nunca use banco de produção para testes
+- ❌ Não compartilhe banco entre testes unitários e E2E
+
 ### 3.6 Boas Práticas para Testes E2E
 
 1. **Use beforeAll/afterAll**: Crie a aplicação uma vez para todos os testes
