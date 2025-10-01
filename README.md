@@ -6,32 +6,38 @@ Este tutorial apresenta conceitos e práticas de testes automatizados utilizando
 
 ## 📑 Sumário
 
-- [Parte 1: Introdução Teórica sobre Testes Automatizados](#parte-1-introdução-teórica-sobre-testes-automatizados)
-  - [1.1 O que são Testes Automatizados?](#11-o-que-são-testes-automatizados)
-  - [1.2 Tipos de Testes](#12-tipos-de-testes)
-  - [1.3 Pirâmide de Testes](#13-pirâmide-de-testes)
-  - [1.4 Ferramentas no NestJS](#14-ferramentas-no-nestjs)
-  - [1.5 Padrão AAA (Arrange-Act-Assert)](#15-padrão-aaa-arrange-act-assert)
-  - [1.6 Comandos de Teste](#16-comandos-de-teste)
-
-- [Parte 2: Testes Unitários (*.spec.ts)](#parte-2-testes-unitários-spects)
-  - [2.1 Estrutura Básica de um Teste Unitário](#21-estrutura-básica-de-um-teste-unitário)
-  - [2.2 Exemplo Real: Testando o AppController](#22-exemplo-real-testando-o-appcontroller)
-  - [2.3 Testando Services com Dependências](#23-testando-services-com-dependências)
-  - [2.4 Principais Matchers do Jest](#24-principais-matchers-do-jest)
-  - [2.5 Boas Práticas para Testes Unitários](#25-boas-práticas-para-testes-unitários)
-
-- [Parte 3: Testes E2E (*.e2e-spec.ts)](#parte-3-testes-e2e-e2e-spects)
-  - [3.1 Estrutura Básica de um Teste E2E](#31-estrutura-básica-de-um-teste-e2e)
-  - [3.2 Exemplo Real: Testando a Rota Principal](#32-exemplo-real-testando-a-rota-principal)
-  - [3.3 Testando API de Tarefas (CRUD Completo)](#33-testando-api-de-tarefas-crud-completo)
-  - [3.4 Métodos HTTP do Supertest](#34-métodos-http-do-supertest)
-  - [3.5 Configuração de Banco de Dados para E2E](#35-configuração-de-banco-de-dados-para-e2e)
-  - [3.6 Boas Práticas para Testes E2E](#36-boas-práticas-para-testes-e2e)
-  - [3.7 Diferenças entre Testes Unitários e E2E](#37-diferenças-entre-testes-unitários-e-e2e)
-
-- [Conclusão](#conclusão)
-- [Estrutura do Projeto](#estrutura-do-projeto)
+- [Tutorial de Testes Automatizados em NestJS](#tutorial-de-testes-automatizados-em-nestjs)
+  - [📑 Sumário](#-sumário)
+  - [Parte 1: Introdução Teórica sobre Testes Automatizados](#parte-1-introdução-teórica-sobre-testes-automatizados)
+    - [1.1 O que são Testes Automatizados?](#11-o-que-são-testes-automatizados)
+    - [1.2 Tipos de Testes](#12-tipos-de-testes)
+      - [1.2.1 Testes Unitários (Unit Tests)](#121-testes-unitários-unit-tests)
+      - [1.2.2 Testes de Integração (Integration Tests)](#122-testes-de-integração-integration-tests)
+      - [1.2.3 Testes End-to-End (E2E Tests)](#123-testes-end-to-end-e2e-tests)
+    - [1.3 Pirâmide de Testes](#13-pirâmide-de-testes)
+    - [1.4 Ferramentas no NestJS](#14-ferramentas-no-nestjs)
+    - [1.5 Padrão AAA (Arrange-Act-Assert)](#15-padrão-aaa-arrange-act-assert)
+    - [1.6 Comandos de Teste](#16-comandos-de-teste)
+  - [Parte 2: Testes Unitários (\*.spec.ts)](#parte-2-testes-unitários-spects)
+    - [2.1 Estrutura Básica de um Teste Unitário](#21-estrutura-básica-de-um-teste-unitário)
+    - [2.2 Exemplo Real: Testando o AppController](#22-exemplo-real-testando-o-appcontroller)
+    - [2.3 Testando Services com Dependências](#23-testando-services-com-dependências)
+    - [2.4 Principais Matchers do Jest](#24-principais-matchers-do-jest)
+    - [2.5 Boas Práticas para Testes Unitários](#25-boas-práticas-para-testes-unitários)
+  - [Parte 3: Testes E2E (\*.e2e-spec.ts)](#parte-3-testes-e2e-e2e-spects)
+    - [3.1 Estrutura Básica de um Teste E2E](#31-estrutura-básica-de-um-teste-e2e)
+    - [3.2 Exemplo Real: Testando a Rota Principal](#32-exemplo-real-testando-a-rota-principal)
+    - [3.3 Testando API de Tarefas (CRUD Completo)](#33-testando-api-de-tarefas-crud-completo)
+    - [3.4 Métodos HTTP do Supertest](#34-métodos-http-do-supertest)
+    - [3.5 Configuração de Banco de Dados para E2E](#35-configuração-de-banco-de-dados-para-e2e)
+      - [Configuração para PostgreSQL](#configuração-para-postgresql)
+    - [3.6 Boas Práticas para Testes E2E](#36-boas-práticas-para-testes-e2e)
+    - [3.7 Diferenças entre Testes Unitários e E2E](#37-diferenças-entre-testes-unitários-e-e2e)
+  - [Conclusão](#conclusão)
+    - [Comandos Principais](#comandos-principais)
+    - [Recursos Adicionais](#recursos-adicionais)
+  - [Estrutura do Projeto](#estrutura-do-projeto)
+    - [Rotas da API](#rotas-da-api)
 
 ---
 
@@ -168,8 +174,74 @@ describe('NomeDoComponente', () => {
 
 ### 2.2 Exemplo Real: Testando o AppController
 
-**Arquivo**: `src/app.controller.spec.ts`
+1. no terminal, execute `npm run test:watch`. deverá aparecer um menu, conforme **saída 1**.
+2. selecione `a` para executar todos os testes. deverá aparecer um _fail_, conforme saída abaixo **saída 2**.
+3. modifique o arquivo `src/app.controller.spec.ts`, salve. será mostrado algo como a **saída 3** informando que os testes foram "passados".
+4. adicione os testes para a rota `/tasks`
 
+**saída 1**
+```bash
+
+No tests found related to files changed since last commit.
+Press `a` to run all tests, or run Jest with `--watchAll`.
+
+Watch Usage
+ › Press a to run all tests.
+ › Press f to run only failed tests.
+ › Press p to filter by a filename regex pattern.
+ › Press t to filter by a test name regex pattern.
+ › Press q to quit watch mode.
+ › Press Enter to trigger a test run.
+
+```
+
+**saída 2**
+```bash
+
+ FAIL  src/app.controller.spec.ts
+  AppController
+    root
+      ✕ should return "Hello World!" (18 ms)
+
+  ● AppController › root › should return "Hello World!"
+
+    TypeError: appController.getHello is not a function
+
+      17 |   describe('root', () => {
+      18 |     it('should return "Hello World!"', () => {
+    > 19 |       expect(appController.getHello()).toBe('Hello World!');
+         |                            ^
+      20 |     });
+      21 |   });
+      22 | });
+
+      at Object.<anonymous> (app.controller.spec.ts:19:28)
+
+Test Suites: 1 failed, 1 total
+Tests:       1 failed, 1 total
+Snapshots:   0 total
+Time:        1.251 s, estimated 2 s
+Ran all test suites.
+
+```
+
+**saída 3**
+```bash
+
+ PASS  src/app.controller.spec.ts
+  AppController
+    getInfo
+      ✓ deve retornar informações da API com status, version e description (53 ms)
+
+Test Suites: 1 passed, 1 total
+Tests:       1 passed, 1 total
+Snapshots:   0 total
+Time:        3.871 s
+Ran all test suites.
+
+```
+
+**Arquivo**: `src/app.controller.spec.ts`
 ```typescript
 import { Test, TestingModule } from '@nestjs/testing';
 import { AppController } from './app.controller';
@@ -213,7 +285,57 @@ describe('AppController', () => {
 
 ### 2.3 Testando Services com Dependências
 
-Quando um serviço possui dependências (como repositórios do TypeORM), precisamos usar **mocks**:
+Quando um serviço possui dependências (como repositórios do TypeORM), precisamos usar **mocks**, conforme código abaixo.
+
+1. ainda com o terminal com o teste em execução, adicione o arquivo `/src/tasks/tasks.controller.spec.ts`. o teste irá informar que falhou, conforme **saída 4**.
+2. modifique o arquivo `src/tasks/tasks.controller.spec.ts`, conforme código abaixo e salve. o teste passará conforme **saída 5**.
+
+Importante, para cada arquivo `*.controller.ts` com _endpoints_, precisa de um arquivo de teste correspondente `*.controller.spec.ts` com seus testes automatizados.
+Na **saída 5** é mostrado a execução de 2 arquivos `src/app.controller.spec.ts` e `src/tasks/tasks.controller.spec.ts`.
+
+**saída 4**
+```bash
+
+ FAIL  src/tasks/tasks.controller.spec.ts
+  ● Test suite failed to run
+
+    Your test suite must contain at least one test.
+
+      at onResult (../node_modules/@jest/core/build/index.js:1057:18)
+      at ../node_modules/@jest/core/build/index.js:1127:165
+      at ../node_modules/emittery/index.js:363:13
+          at Array.map (<anonymous>)
+      at Emittery.emit (../node_modules/emittery/index.js:361:23)
+
+ PASS  src/app.controller.spec.ts
+
+Test Suites: 1 failed, 1 passed, 2 total
+Tests:       1 passed, 1 total
+Snapshots:   0 total
+Time:        2.435 s
+Ran all test suites.
+
+Watch Usage: Press w to show more.
+
+```
+
+**saída 4**
+```bash
+
+ PASS  src/app.controller.spec.ts
+ PASS  src/tasks/tasks.controller.spec.ts
+
+Test Suites: 2 passed, 2 total
+Tests:       5 passed, 5 total
+Snapshots:   0 total
+Time:        2.995 s
+Ran all test suites.
+
+Watch Usage: Press w to show more.
+
+```
+
+**Arquivo**: `src/tasks/tasks.controller.spec.ts`
 
 ```typescript
 import { Test, TestingModule } from '@nestjs/testing';
@@ -429,12 +551,81 @@ describe('NomeDoController (e2e)', () => {
 
 ### 3.2 Exemplo Real: Testando a Rota Principal
 
-**Arquivo**: `test/app.e2e-spec.ts`
+1. se ainda não finalizou os testes unitários, pressine a tecla `q` para encerrar os testes.
+2. no arquivo `package.json`, adicione a linha `"test:e2e:watch": "jest --watch --config ./test/jest-e2e.json",` antes da linha `"test:e2e": "jest --config ./test/jest-e2e.json"`. isso irá criar o _script_ `test:e2e:watch`.
+3. execute os testes e2e com o comando `npm run test:e2e:watch`. irá aparecer erro, conforme **saída 6**.
+4. modifique o arquivo `test/app.e2e-spec.ts` conforme código abaixo. irá aparecer o resultado da **saída 7**.
 
+
+**saída 6**
+```bash
+
+ FAIL  test/app.e2e-spec.ts
+  AppController (e2e)
+    ✕ / (GET) (345 ms)
+
+  ● AppController (e2e) › / (GET)
+
+    expected 'Hello World!' response body, got '{"status":"online","version":"1.0.0","description":"Esta é API de tarefas (todos) da turma de Infoweb 2025."}'
+
+      21 |       .get('/')
+      22 |       .expect(200)
+    > 23 |       .expect('Hello World!');
+         |        ^
+      24 |   });
+      25 | });
+      26 |
+
+      at Object.<anonymous> (app.e2e-spec.ts:23:8)
+      ----
+      at error (../node_modules/supertest/lib/test.js:392:15)
+      at Test._assertBody (../node_modules/supertest/lib/test.js:263:16)
+      at ../node_modules/supertest/lib/test.js:365:13
+      at Test._assertFunction (../node_modules/supertest/lib/test.js:342:13)
+      at Test.assert (../node_modules/supertest/lib/test.js:195:23)
+      at localAssert (../node_modules/supertest/lib/test.js:138:14)
+      at Server.<anonymous> (../node_modules/supertest/lib/test.js:152:11)
+
+Test Suites: 1 failed, 1 total
+Tests:       1 failed, 1 total
+Snapshots:   0 total
+Time:        2.259 s
+Ran all test suites related to changed files.
+
+Watch Usage
+ › Press a to run all tests.
+ › Press f to run only failed tests.
+ › Press p to filter by a filename regex pattern.
+ › Press t to filter by a test name regex pattern.
+ › Press q to quit watch mode.
+ › Press i to run failing tests interactively.
+ › Press Enter to trigger a test run.
+
+```
+
+
+**saída 7**
+```bash
+
+ PASS  test/app.e2e-spec.ts
+  AppController (e2e)
+    ✓ / (GET) - deve retornar informações da API (309 ms)
+
+Test Suites: 1 passed, 1 total
+Tests:       1 passed, 1 total
+Snapshots:   0 total
+Time:        3.048 s
+Ran all test suites related to changed files.
+
+Watch Usage: Press w to show more.
+
+```
+
+**Arquivo**: `test/app.e2e-spec.ts`
 ```typescript
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
-import * as request from 'supertest';
+import request from 'supertest';
 import { AppModule } from './../src/app.module';
 
 describe('AppController (e2e)', () => {
@@ -472,12 +663,70 @@ describe('AppController (e2e)', () => {
 
 ### 3.3 Testando API de Tarefas (CRUD Completo)
 
+1. ainda com o monitoramento do teste, adicione o arquivo `test/tasks.e2e-spec.ts`. o resultado esta na **saída 8**.
+2. modifique o arquivo `test/tasks.e2e-spec.ts` conforme código abaixo. um resultado esperado é mostrado na **saída 9**.
+
+
+**saída 8**
+```bash
+
+ FAIL  test/tasks.e2e-spec.ts
+  ● Test suite failed to run
+
+    Your test suite must contain at least one test.
+
+      at onResult (../node_modules/@jest/core/build/index.js:1057:18)
+      at ../node_modules/@jest/core/build/index.js:1127:165
+      at ../node_modules/emittery/index.js:363:13
+          at Array.map (<anonymous>)
+      at Emittery.emit (../node_modules/emittery/index.js:361:23)
+
+ PASS  test/app.e2e-spec.ts
+
+Test Suites: 1 failed, 1 passed, 2 total
+Tests:       1 passed, 1 total
+Snapshots:   0 total
+Time:        4.357 s
+Ran all test suites related to changed files.
+
+Watch Usage: Press w to show more.
+
+```
+
+**saída 8**
+```bash
+
+[Nest] 137590  - 01/10/2025, 10:32:08   ERROR [TypeOrmModule] Unable to connect to the database. Retrying (1)...
+QueryFailedError: SQLITE_BUSY: database is locked
+    at Statement.handler (/home/minora/minora/nest/api-nest-notas-02-testes/src/driver/sqlite/SqliteQueryRunner.ts:133:29)
+    at Statement.replacement (/home/minora/minora/nest/api-nest-notas-02-testes/node_modules/sqlite3/lib/trace.js:25:27)
+    at Statement.replacement (/home/minora/minora/nest/api-nest-notas-02-testes/node_modules/sqlite3/lib/trace.js:25:27)
+ PASS  test/tasks.e2e-spec.ts
+ PASS  test/app.e2e-spec.ts (5.032 s)
+
+Test Suites: 2 passed, 2 total
+Tests:       13 passed, 13 total
+Snapshots:   0 total
+Time:        5.669 s, estimated 7 s
+Ran all test suites related to changed files.
+
+Watch Usage
+ › Press a to run all tests.
+ › Press f to run only failed tests.
+ › Press p to filter by a filename regex pattern.
+ › Press t to filter by a test name regex pattern.
+ › Press q to quit watch mode.
+ › Press Enter to trigger a test run.
+
+```
+
+
 **Arquivo**: `test/tasks.e2e-spec.ts` (exemplo completo)
 
 ```typescript
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication, ValidationPipe } from '@nestjs/common';
-import * as request from 'supertest';
+import request from 'supertest';
 import { AppModule } from './../src/app.module';
 import { TaskStatus } from '../src/tasks/task.entity';
 
@@ -710,7 +959,8 @@ Para testes E2E, é recomendado usar um banco de dados separado:
 }
 ```
 
-**Dica**: Para SQLite (usado neste projeto), o banco é criado automaticamente. Para outros bancos, configure variáveis de ambiente específicas para teste.
+**Dica**: Para SQLite (usado neste projeto), o banco é criado automaticamente.
+Para outros bancos, configure variáveis de ambiente específicas para teste.
 
 #### Configuração para PostgreSQL
 
@@ -723,7 +973,7 @@ Crie um arquivo `.env.test` na raiz do projeto:
 ```env
 # .env.test
 DATABASE_HOST=localhost
-DATABASE_PORT=5432
+DATABASE_PORT=5433
 DATABASE_USER=postgres
 DATABASE_PASSWORD=postgres
 DATABASE_NAME=test_database
@@ -750,7 +1000,7 @@ describe('AppController (e2e)', () => {
         TypeOrmModule.forRoot({
           type: 'postgres',
           host: process.env.DATABASE_HOST || 'localhost',
-          port: parseInt(process.env.DATABASE_PORT) || 5432,
+          port: parseInt(process.env.DATABASE_PORT || '5432'),
           username: process.env.DATABASE_USER || 'postgres',
           password: process.env.DATABASE_PASSWORD || 'postgres',
           database: process.env.DATABASE_NAME || 'test_database',
@@ -792,7 +1042,6 @@ Adicione no `package.json`:
 Crie um `docker-compose.test.yml`:
 
 ```yaml
-version: '3.8'
 services:
   postgres_test:
     image: postgres:15-alpine
@@ -922,4 +1171,4 @@ test/
 
 ---
 
-**Desenvolvido para a turma de Infoweb 2025**
+**Desenvolvido by github copilot agent para a turma de Infoweb 2025**
