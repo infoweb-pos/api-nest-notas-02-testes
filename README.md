@@ -156,9 +156,16 @@ describe('AppController', () => {
     appController = app.get<AppController>(AppController);
   });
 
-  describe('root', () => {
-    it('should return "Hello World!"', () => {
-      expect(appController.getHello()).toBe('Hello World!');
+  describe('getInfo', () => {
+    it('deve retornar informações da API com status, version e description', () => {
+      const result = appController.getInfo();
+      
+      expect(result).toHaveProperty('status');
+      expect(result).toHaveProperty('version');
+      expect(result).toHaveProperty('description');
+      expect(result.status).toBe('online');
+      expect(result.version).toBe('1.0.0');
+      expect(result.description).toBe('Esta é API de tarefas (todos) da turma de Infoweb 2025.');
     });
   });
 });
@@ -403,11 +410,15 @@ describe('AppController (e2e)', () => {
     await app.init();
   });
 
-  it('/ (GET)', () => {
+  it('/ (GET) - deve retornar informações da API', () => {
     return request(app.getHttpServer())
       .get('/')
       .expect(200)
-      .expect('Hello World!');
+      .expect((res) => {
+        expect(res.body).toHaveProperty('status', 'online');
+        expect(res.body).toHaveProperty('version', '1.0.0');
+        expect(res.body).toHaveProperty('description');
+      });
   });
 });
 ```
