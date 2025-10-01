@@ -327,6 +327,14 @@ expect(string).toContain('substring');
 expect(array).toContain(item);
 expect(array).toHaveLength(3);
 
+// Objetos
+expect(object).toHaveProperty('status');                    // Verifica se propriedade existe
+expect(object).toHaveProperty('status', 'online');          // Verifica propriedade e valor
+expect(object).toHaveProperty('user.name');                 // Propriedade aninhada
+expect(object).toHaveProperty('config.timeout', 3000);      // Propriedade aninhada com valor
+expect(object).toMatchObject({ status: 'online' });         // Verifica subset de propriedades
+expect(object).toEqual({ status: 'online', version: '1.0' }); // Igualdade exata de objeto
+
 // Exceções
 expect(() => fn()).toThrow();
 expect(() => fn()).toThrow(Error);
